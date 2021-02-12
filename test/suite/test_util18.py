@@ -25,7 +25,6 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
-
 import wttest
 from suite_subprocess import suite_subprocess
 from helper import compare_files
@@ -38,7 +37,7 @@ def timestamp_str(t):
 class test_hs11(wttest.WiredTigerTestCase, suite_subprocess):
     conn_config = 'cache_size=50MB'
     session_config = 'isolation=snapshot'
-    
+
     def add_data_with_timestamp(self, uri, value, ts):
         # Apply a series of updates with commit timestamp.
         cursor = self.session.open_cursor(uri)
@@ -47,7 +46,7 @@ class test_hs11(wttest.WiredTigerTestCase, suite_subprocess):
             cursor[str(i)] = value
             self.session.commit_transaction('commit_timestamp=' + timestamp_str(ts))
         cursor.close()
-    
+
     def test_dump_obsolete_data(self):
         uri = 'table:test_util18'
         create_params = 'key_format=S,value_format=S'
@@ -59,7 +58,7 @@ class test_hs11(wttest.WiredTigerTestCase, suite_subprocess):
         value4 = 'd' * 100
 
         self.conn.set_timestamp('oldest_timestamp=' + timestamp_str(1))
-        
+
         self.add_data_with_timestamp(uri, value1, 2)
         self.add_data_with_timestamp(uri, value2, 3)
         self.add_data_with_timestamp(uri, value3, 5)
